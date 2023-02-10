@@ -3,6 +3,8 @@
 let $displayArea = $(".card-container")
 let search = 'rum'
 
+
+// ready document. Using main search button on click to run main function
 $(document).ready(function(){
     $( "#btn" ).click(function() {     
         console.log( ".click called." );
@@ -10,19 +12,29 @@ $(document).ready(function(){
     });
 })
 
+// ready document. Using main search bar on enter to be able to search. 
 $(document).ready(function(){
     $('input').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
             getDrinkInfo($("#search-text").val())
-        }
-      
+        }     
       });
 })
 
+$(document).ready(function(){
+    $( "#btnR" ).click(function() {     
+        console.log( ".click called." );
+        getRandomDrink()
+    });
+})
+
+
+// Main function for search for drinks via typing in the search bar
 function getDrinkInfo(search) {
 $.get("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + search, (data) => {
 
+    // empty out the container. This will dump all cards and keep our container
     $(".card-container").empty()
 
     if (data.drinks == null) {
@@ -37,6 +49,7 @@ $.get("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + search, (dat
         let drinkPicture = data.drinks[i].strDrinkThumb
         
 
+        // best attempt for ingredients. API is formated weird.
         var ingredientRaw = [data.drinks[i].strIngredient1,data.drinks[i].strIngredient2,data.drinks[i].strIngredient3,data.drinks[i].strIngredient4,data.drinks[i].strIngredient5,data.drinks[i].strIngredient6,data.drinks[i].strIngredient7,data.drinks[i].strIngredient8,data.drinks[i].strIngredient9,data.drinks[i].strIngredient10]
         var measureRaw = [data.drinks[i].strMeasure1,data.drinks[i].strMeasure2,data.drinks[i].strMeasure3,data.drinks[i].strMeasure4,data.drinks[i].strMeasure5,data.drinks[i].strMeasure6,data.drinks[i].strMeasure7,data.drinks[i].strMeasure8,data.drinks[i].strMeasure9,data.drinks[i].strMeasure10]
         
@@ -52,54 +65,7 @@ $.get("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + search, (dat
 
 }
 
-
-function pushToPage(drinkTitle, drinkPicture, ingredient, measure, instructions) {
-
-
-    let $cardAdd = $('<div></div>');
-    $cardAdd.addClass("card")
-
-
-
-    let $h2 = $('<h2></h2>').addClass("drink-name");
-    $h2.text(drinkTitle);
-    $cardAdd.append($h2)
-
-    let $pic = $('<img></img>').addClass("drink-picture")
-    $pic.attr('src', drinkPicture)
-    $cardAdd.append($pic)
-
-
-    var i = 0
-    while( i < ingredient.length) {
-        let $ingredient = $('<div></div>')
-        $ingredient.addClass("drink-ingredients")
-        if (measure[i] !== undefined) {
-            $ingredient.text(measure[i] + '   ' + ingredient[i])
-            $cardAdd.append($ingredient)
-        } else {
-            $ingredient.text(ingredient[i])
-            $cardAdd.append($ingredient)
-        }
-        i++
-    }
-
-    let $instructions = $('<p></p>')
-    $instructions.text(instructions)
-    $instructions.addClass("instructions")
-    $cardAdd.append($instructions)
-
-    $('.card-container').append($cardAdd)
-
-}
-
-$(document).ready(function(){
-    $( "#btnR" ).click(function() {     
-        console.log( ".click called." );
-        getRandomDrink()
-    });
-})
-
+// Random button function!
 function getRandomDrink() {
     $.get("https://www.thecocktaildb.com/api/json/v1/1/random.php", (data) => {
         console.log(data.drinks);
@@ -126,19 +92,48 @@ function getRandomDrink() {
     
 }
 
-// }
-// var search;
+// function that pushes onto the page itself
+function pushToPage(drinkTitle, drinkPicture, ingredient, measure, instructions) {
+
+    // developing a card for each item
+    let $cardAdd = $('<div></div>');
+    $cardAdd.addClass("card")
+
+    //  name for each item
+    let $h2 = $('<h2></h2>').addClass("drink-name");
+    $h2.text(drinkTitle);
+    $cardAdd.append($h2)
+
+    // pic for each item. Class will adjust size of picture
+    let $pic = $('<img></img>').addClass("drink-picture")
+    $pic.attr('src', drinkPicture)
+    $cardAdd.append($pic)
 
 
+    // Some ingredients don't have a corressponding measures. If there is no measure it only appends ingredient text with no measurement.
+    var i = 0
+    while( i < ingredient.length) {
+        let $ingredient = $('<div></div>')
+        $ingredient.addClass("drink-ingredients")
+        if (measure[i] !== undefined) {
+            $ingredient.text(measure[i] + '   ' + ingredient[i])
+            $cardAdd.append($ingredient)
+        } else {
+            $ingredient.text(ingredient[i])
+            $cardAdd.append($ingredient)
+        }
+        i++
+    }
 
+    // Paragraph append
+    let $instructions = $('<p></p>')
+    $instructions.text(instructions)
+    $instructions.addClass("instructions")
+    $cardAdd.append($instructions)
 
+    // Adding card with all appended items into the main container
+    $('.card-container').append($cardAdd)
 
-// let searchDrink = 'www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita' + search
+}
 
-// let searchIngredient = 'www.thecocktaildb.com/api/json/v1/1/filter.php?i=gin' + search
-
-// // var results = JSON.parse(data)
-
-// fetch('www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
-//     .then(res => console.log(res))
 
