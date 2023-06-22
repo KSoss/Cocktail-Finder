@@ -11,16 +11,16 @@ body {
     line-height: 1.6;
     font-family: 'WorkSans', sans-serif;
     background-color: rgb(53, 52, 52);
-    
-    
 }
 
 
 .search-wrap {
+    display: flex;
     max-width: 1280px;
     margin: auto;
     margin-bottom: 20px;
     text-align: center;
+    justify-content: center;
 }
 
 .search-text {
@@ -40,10 +40,7 @@ body {
 
 .btn {
     width: 10%;
-    transform: translateY(-3%);
     cursor: pointer;
-    outline: 0px;
-    height: 60px;
     font-size: 1.5rem;
     border-top-right-radius: 2rem;
     border-bottom-right-radius: 2rem;
